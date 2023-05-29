@@ -14,11 +14,11 @@ class Package(PackageBase):
 
 @AppImage.on_apt.handler
 def on_apt(event):
-    event.package('cmake', 'swig', 'libfreetype6-dev', 'libgeos-dev', 'libproj-dev')
-    msver = '7.6.4'
+    #event.package('cmake', 'swig', 'libfreetype6-dev', 'libgeos-dev', 'libproj-dev')
+    
 
     event.pop()
-    event.command(
+    ''' event.command(
         'cd /tmp',
         'curl -sSL https://download.osgeo.org/mapserver/mapserver-{0}.tar.gz > mapserver-{0}.tar.gz'.format(msver),
         'tar -zxf mapserver-{0}.tar.gz && rm mapserver-{0}.tar.gz'.format(msver),
@@ -33,8 +33,8 @@ def on_apt(event):
             ' > ../configure.out.txt',
         'make && make install',
         '{} -m pip install mapscript/python'.format(python_bin),
-        'cd / && rm -rf /tmp/mapserver',
-    )
+        'cd / && rm -rf /tmp/mapserver', 
+    ) '''
 
 
 @AppImage.on_package_files.handler
