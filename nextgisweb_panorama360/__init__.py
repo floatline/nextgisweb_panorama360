@@ -1,15 +1,13 @@
 from nextgisweb.env import Component
-from nextgisweb.lib.config import Option, OptionAnnotations
-
+from nextgisweb.lib.config import Option, OptionAnnotation
 from .model import Base
-
 __all__ = [
 
 ]
 
 VERSION = "0.0.1"
 
-# 360_viewer was NOT a good name
+
 class Panorama360Component(Component):
     identity = 'panorama360'
     metadata = Base.metadata
