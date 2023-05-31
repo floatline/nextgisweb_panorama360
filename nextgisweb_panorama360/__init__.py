@@ -1,5 +1,5 @@
 from nextgisweb.env import Component
-from nextgisweb.lib.config import Option, OptionAnnotation
+from nextgisweb.lib.config import Option
 from .model import Base
 __all__ = [
 
