@@ -12,15 +12,15 @@ requires = (
 
 entry_points = {
     'nextgisweb.packages': [
-        'nextgisweb_360_viewer = nextgisweb_360_viewer:pkginfo',
+        'nextgisweb_panorama360 = nextgisweb_panorama360:pkginfo',
     ],
     'nextgisweb.amd_packages': [
-        'nextgisweb_360_viewer = nextgisweb_360_viewer:amd_packages',
+        'nextgisweb_panorama360 = nextgisweb_panorama360:amd_packages',
     ],
 }
 
 setup(
-    name='nextgisweb_360_viewer',
+    name='nextgisweb_panorama360',
     version=VERSION,
     description='360 Panorama Viewer for NextGIS Web',
     author='floatline',

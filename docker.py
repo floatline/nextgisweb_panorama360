@@ -37,14 +37,14 @@ def on_apt(event):
     ) '''
 
 
-@AppImage.on_package_files.handler
-def on_package_files(event):
-    if isinstance(event.package, Package):
-        event.add(event.package.path / 'mapscript-to-env')
+# @AppImage.on_package_files.handler
+# def on_package_files(event):
+#     if isinstance(event.package, Package):
+#         event.add(event.package.path / 'mapscript-to-env')
 
 
-@AppImage.on_virtualenv.handler
-def on_virtualenv(event):
-    event.before_install(
-        '$NGWROOT/package/nextgisweb_mapserver/mapscript-to-env ' +
-        '$NGWROOT/env/bin/python ' + python_bin)
+# @AppImage.on_virtualenv.handler
+# def on_virtualenv(event):
+#     event.before_install(
+#         '$NGWROOT/package/nextgisweb_mapserver/mapscript-to-env ' +
+#         '$NGWROOT/env/bin/python ' + python_bin)
