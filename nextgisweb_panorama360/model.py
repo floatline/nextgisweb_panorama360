@@ -42,7 +42,7 @@ class Panorama360Table(Base):
     # enabled = db.Column(db.Boolean)
     # opacity = db.Column(db.Float)
 
-    #table = db.relationship(
+    # table = db.relationship(
     #     WebMap, foreign_keys=webmap_id, backref=db.backref(
     #         'basemaps', cascade='all, delete-orphan', order_by=position,
     #         collection_class=ordering_list('position')))
