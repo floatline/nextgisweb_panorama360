@@ -1,8 +1,9 @@
-# 360 Panorama Viewer for NextGIS Web
+# Panorama360
+A 360 degree panorama photography viewer for NextGIS Web
 
 ## Installation
 
-
+git clone https://github.com/floatline/nextgisweb_panorama360.git
 
 ## License
 
