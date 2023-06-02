@@ -171,7 +171,7 @@ define([
         },
 
         serializeInMixin: function (data) {
-            if (data.basemap_webmap === undefined) { data.basemap_webmap = {}; }
+            if (data.panorama360_table == undefined) { data.panorama360_table = {}; }
             var store = this.itemStore;
 
             function dump(itm) {
@@ -183,14 +183,13 @@ define([
                 };
             }
 
-            data.basemap_webmap.basemaps = array.map(
+            data.panorama360_table.panoramas = array.map(
                 store.getValues(this.itemModel.root, "children"),
                 function (itm) { return dump(itm); }
             );
         },
 
         deserializeInMixin: function (data) {
-            var value = data.basemap_webmap.basemaps;
             if (value === undefined) { return; }
 
             array.forEach(value, function (i) {

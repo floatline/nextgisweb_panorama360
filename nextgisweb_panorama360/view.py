@@ -1,24 +1,15 @@
 from nextgisweb.resource import Widget
+from nextgisweb.webmap import WebMap
+from .model import Panorama360Layer
 
-#from .model import MapserverStyle
-from .util import _
 
-
-'''class StyleWidget(Widget):
-    resource = MapserverStyle
+class Panorama360LayerWidget(Widget):
+    resource = Panorama360Layer
     operation = ('create', 'update')
-    amdmod = 'ngw-mapserver/StyleWidget'
+    amdmod = 'ngw-panorama360/LayerWidget'
 
-    def config(self):
-        res = super(StyleWidget, self).config()
 
-        # TODO: Security
-        if self.operation == 'create':
-            res['defaultValue'] = MapserverStyle.default_style_xml(
-                self.obj.parent)
-
-        return res'''
-
-# same
-def setup_pyramid(comp, config):
-    pass
+class Panorama360MapWidget(Widget):
+    resource = WebMap
+    operation = ('create', 'update')
+    amdmod = 'ngw-panorama360/WebMapWidget'
