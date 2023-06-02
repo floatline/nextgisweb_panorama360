@@ -1,8 +1,8 @@
-from nextgisweb.env import Component
+from nextgisweb.env import Component, require
 from nextgisweb.lib.config import Option
-from .model import Base
+from .model import Base, Panorama360Layer, Panorama360Table
 __all__ = [
-
+    'Base', 'Panorama360Layer', 'Panorama360Table'
 ]
 
 VERSION = "0.0.1"
@@ -13,24 +13,22 @@ class Panorama360Component(Component):
     metadata = Base.metadata
 
     def initialize(self):
-        super(Panorama360Component, self).initialize()
+        from . import plugin
 
     def configure(self):
         super(Panorama360Component, self).configure()
 
+    @require('resource', 'webmap')
     def setup_pyramid(self, config):
-        super(Panorama360Component, self).setup_pyramid(config)
-
         from . import view
-        view.setup_pyramid(self, config)
+
+    def client_settings(self, request):
+        return None
 
     def sys_info(self):
         return (
             ("Panorama360", VERSION),
         )
-
-
-    
 
 
 def pkginfo():
@@ -39,5 +37,5 @@ def pkginfo():
 
 def amd_packages():
     return ((
-        'ngw-panorama-360', 'nextgisweb_panorama_360:amd/ngw-panorama360'
+        'ngw-panorama360', 'nextgisweb_panorama360:amd/ngw-panorama360'
     ),)
