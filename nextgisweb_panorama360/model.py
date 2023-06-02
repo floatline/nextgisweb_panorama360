@@ -10,6 +10,7 @@ from nextgisweb.resource import (
     DataScope,
     ResourceScope,
 )
+from nextgisweb.webmap import WebMap
 
 from .util import _
 
@@ -35,30 +36,62 @@ class Panorama360Layer(Base, Resource):
 class Panorama360Table(Base):
     __tablename__ = 'panorama360_table'
 
-    panorama360_table_id = db.Column(db.Integer, primary_key=True)
+    webmap_id = db.Column(db.ForeignKey(WebMap.id), primary_key=True)
     resource_id = db.Column(db.ForeignKey(Resource.id), primary_key=True)
-    # position = db.Column(db.Integer)
+    position = db.Column(db.Integer)
     display_name = db.Column(db.Unicode, nullable=False)
-    # enabled = db.Column(db.Boolean)
-    # opacity = db.Column(db.Float)
+    enabled = db.Column(db.Boolean)
+    opacity = db.Column(db.Float)
+    
+    table = db.relationship(
+        WebMap, foreign_keys=webmap_id, backref=db.backref(
+                'panoramas', cascade='all, delete-orphan', order_by=position,
+                collection_class=ordering_list('position')))
+    resource = db.relationship(
+         Resource, foreign_keys=resource_id,
+         backref=db.backref('_panoramas', cascade='all'))
 
-    # table = db.relationship(
-    #     WebMap, foreign_keys=webmap_id, backref=db.backref(
-    #         'basemaps', cascade='all, delete-orphan', order_by=position,
-    #         collection_class=ordering_list('position')))
+    def to_dict(self):
+        return dict(
+            resource_id=self.resource_id,
+            position=self.position,
+            display_name=self.display_name,
+            enabled=self.enabled,
+            opacity=self.opacity)
 
-    #resource = db.relationship(
-    #     Resource, foreign_keys=resource_id,
-    #     backref=db.backref('_basemaps', cascade='all'))
+class Panorama360LayerSerializer(Serializer):
+    identity = Panorama360Layer.identity
+    resclass = Panorama360Layer
 
-    # def to_dict(self):
-    #     return dict(
-    #         resource_id=self.resource_id,
-    #         position=self.position,
-    #         display_name=self.display_name,
-    #         enabled=self.enabled,
-    #         opacity=self.opacity)
+    url = SP(read=DataScope.read, write=DataScope.write)
+    # qms = SP(read=DataScope.read, write=DataScope.write)
+    # copyright_text = SP(read=DataScope.read, write=DataScope.write)
+    # copyright_url = SP(read=DataScope.read, write=DataScope.write)
 
+
+class _panorama360_attr(SP):
+    def getter(self, srlzr):
+        return sorted(
+            [p360.to_dict() for p360 in srlzr.obj.panoramas],
+            key=lambda p360: p360['position'])
+
+    def setter(self, srlzr, value):
+        srlzr.obj.panoramas = []
+
+        for p360 in value:
+            p360_object = Panorama360Table(resource_id=p360['resource_id'])
+            srlzr.obj.panoramas.append(p360_object)
+
+            for attr in ('display_name', 'enabled', 'opacity'):
+                setattr(p360_object, attr, p360[attr])
+
+
+class Panorama360pWebMapSerializer(Serializer):
+    identity = Panorama360Table.__tablename__
+    resclass = WebMap
+
+    panoramas = _panorama360_attr(read=ResourceScope.read,
+                               write=ResourceScope.update)
 
 
 
