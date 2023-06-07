@@ -17,22 +17,6 @@ from .util import _
 # I'm not sure how Base works but without it Panorama360 doesn't show up in the Resource tab
 Base = declarative_base()
 
-class Panorama360Layer(Base, Resource):
-    identity = 'panorama360_layer'
-    cls_display_name = _("Panorama360")
-
-    __scope__ = DataScope
-
-    url = db.Column(db.Unicode, nullable=False)
-    # qms = db.Column(db.Unicode)
-    # copyright_text = db.Column(db.Unicode)
-    # copyright_url = db.Column(db.Unicode)
-
-    @classmethod
-    def check_parent(cls, parent):
-        return isinstance(parent, ResourceGroup)
-
-
 class Panorama360Table(Base):
     __tablename__ = 'panorama360_table'
 
@@ -56,15 +40,6 @@ class Panorama360Table(Base):
             resource_id=self.resource_id,
             panorama_layer_field=self.panorama_layer_field,
             enabled=self.enabled,)
-
-class Panorama360LayerSerializer(Serializer):
-    identity = Panorama360Layer.identity
-    resclass = Panorama360Layer
-
-    url = SP(read=DataScope.read, write=DataScope.write)
-    # qms = SP(read=DataScope.read, write=DataScope.write)
-    # copyright_text = SP(read=DataScope.read, write=DataScope.write)
-    # copyright_url = SP(read=DataScope.read, write=DataScope.write)
 
 
 class _panorama360_attr(SP):
