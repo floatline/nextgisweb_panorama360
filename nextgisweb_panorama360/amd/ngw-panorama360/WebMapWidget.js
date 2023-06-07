@@ -2,68 +2,32 @@
 
 //@nextgisweb_panorama360/Panorama360"
 define([
-    "dojo/_base/declare",
-    "dojo/_base/array",
-    "dojo/dom-style",
-    "dojo/data/ItemFileWriteStore",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
+    "dojo/_base/declare", 
     "dijit/layout/ContentPane",
-    "dijit/tree/TreeStoreModel",
-    "dijit/Tree",
-    "dijit/tree/dndSource",
+    "dojox/layout/TableContainer",
     "@nextgisweb/pyramid/i18n!",
     "ngw-resource/serialize",
-    "dojo/text!./template/WebMapWidget.hbs",
-    // template
-    "dijit/layout/BorderContainer",
-    "dijit/layout/StackContainer",
-    "dojox/layout/TableContainer",
-    "dijit/Toolbar",
-    "dijit/form/Button",
-    "dijit/form/Form",
-    "ngw-resource/ResourcePicker",
-    "ngw-resource/form/ResourceLink",
-    "ngw-pyramid/form/DisplayNameTextBox",
-    "ngw-pyramid/form/ScaleTextBox",
     "@nextgisweb/gui/react-app",
-    "@nextgisweb/Panorama360",
+    "@nextgisweb/panorama360/panorama360-settings",
 ], function (
     declare,
-    array,
-    domStyle,
-    ItemFileWriteStore,
-    _TemplatedMixin,
-    _WidgetsInTemplateMixin,
     ContentPane,
-    TreeStoreModel,
-    Tree,
-    dndSource,
+    TableContainer,
     i18n,
     serialize,
-    template,
     reactApp,
-    TableContainer,
-    Panorama360
+    Panorama360Settings
 ) {
-    return declare([ContentPane, TableContainer, _TemplatedMixin, _WidgetsInTemplateMixin, serialize.Mixin], {
+    return declare([ContentPane, TableContainer, serialize.Mixin], {
         title: i18n.gettext("Panorama360"),
-        templateString: i18n.renderTemplate(template),
 
         constructor: function () {
-            this.itemStore = new ItemFileWriteStore({data: {
-                items: [{
-                    item_type: "root"
-                }]
-            }});
-
-           
         },
 
         buildRendering: function () {
             this.inherited(arguments);
             this.component = reactApp.default(
-                Panorama360.default,
+                Panorama360Settings.default,
                 { store: this.store },
                 this.domNode
             );
