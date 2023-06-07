@@ -1,4 +1,6 @@
 /* globals define */
+
+//@nextgisweb_panorama360/Panorama360"
 define([
     "dojo/_base/declare",
     "dojo/_base/array",
@@ -23,7 +25,9 @@ define([
     "ngw-resource/ResourcePicker",
     "ngw-resource/form/ResourceLink",
     "ngw-pyramid/form/DisplayNameTextBox",
-    "ngw-pyramid/form/ScaleTextBox"
+    "ngw-pyramid/form/ScaleTextBox",
+    "@nextgisweb/gui/react-app",
+    "@nextgisweb/Panorama360",
 ], function (
     declare,
     array,
@@ -37,9 +41,12 @@ define([
     dndSource,
     i18n,
     serialize,
-    template
+    template,
+    reactApp,
+    TableContainer,
+    Panorama360
 ) {
-    return declare([ContentPane, _TemplatedMixin, _WidgetsInTemplateMixin, serialize.Mixin], {
+    return declare([ContentPane, TableContainer, _TemplatedMixin, _WidgetsInTemplateMixin, serialize.Mixin], {
         title: i18n.gettext("Panorama360"),
         templateString: i18n.renderTemplate(template),
 
@@ -50,175 +57,34 @@ define([
                 }]
             }});
 
-            this.itemModel = new TreeStoreModel({
-                store: this.itemStore,
-                query: {}
-            });
-
-            this.widgetTree = new Tree({
-                model: this.itemModel,
-                showRoot: false,
-                persist: false,
-                dndController: dndSource,
-                getLabel: function (item) {
-                    return item.display_name;
-                },
-                getIconClass: function(item, opened) {
-                    return "dijitLeaf";
-                },
-                checkItemAcceptance: function (node, source, position) {
-                    return position !== "over";
-                },
-                betweenThreshold: 5
-            });
-
-            this.itemIdx = 0;
-            this.widgetTreeRootNodeId = this.widgetTree.rootNode.getIdentity();
+           
         },
 
-
-        postCreate: function () {
+        buildRendering: function () {
             this.inherited(arguments);
-
-            this.widgetTree.placeAt(this.containerTree).startup();
-
-            var widget = this;
-
-            // Add new layer
-            this.btnAddLayer.on("click", function () {
-                widget.layerPicker.pick().then(function (itm) {
-                    widget.itemStore.newItem({
-                            "keyname": null,
-                            "display_name": itm.display_name,
-                            "resource_id": itm.id,
-                            "enabled": true,
-                            "opacity": null
-                        }, {
-                            parent: widget.itemModel.root,
-                            attribute: "children"
-                        }
-                    );
-                    widget.itemIdx++;
-                    widget.widgetTree.set("path", [
-                        widget.widgetTreeRootNodeId,
-                        widget.itemIdx
-                    ]);
-                });
-            });
-
-            // Remove layer
-            this.btnDeleteItem.on("click", function() {
-                var item = widget.widgetTree.selectedItem,
-                    identity = widget.itemModel.getIdentity(item),
-                    node = widget.widgetTree._itemNodesMap[identity][0],
-                    prevSibling = node.getPreviousSibling(),
-                    nextSibling = node.getNextSibling();
-
-                // Switch to sibling node
-                var sibling = prevSibling ? prevSibling : nextSibling;
-                if (sibling) {
-                    widget.widgetTree.set("path", [
-                        widget.widgetTreeRootNodeId,
-                        sibling.getIdentity()
-                    ]);
-                } else {
-                    widget.treeLayoutContainer.removeChild(widget.itemPane);
-                    widget.btnDeleteItem.set("disabled", true);
-                }
-
-                widget.itemStore.deleteItem(item);
-            });
-
-            this.widgetTree.watch("selectedItem", function (attr, oldValue, newValue) {
-                if (newValue) {
-                    widget.widgetProperties.selectChild(widget.paneLayer);
-                    widget.wDisplayName.set("value", widget.getItemValue("display_name"));
-                    widget.wEnabled.set("checked", widget.getItemValue("enabled"));
-                    widget.wOpacity.set("value", widget.getItemValue("opacity"));
-                    widget.wLink.set("value", widget.getItemValue("resource_id"));
-
-                    // Show side panel
-                    if (!oldValue) {
-                        domStyle.set(widget.itemPane.domNode, "display", "block");
-                        widget.treeLayoutContainer.addChild(widget.itemPane);
-                    }
-
-                    widget.btnDeleteItem.set("disabled", false);
-                }
-            });
-
-            this.wDisplayName.watch("value", function (attr, oldValue, newValue) {
-                widget.setItemValue("display_name", newValue);
-            });
-
-            this.wEnabled.watch("checked", function (attr, oldValue, newValue) {
-                widget.setItemValue("enabled", newValue);
-            });
-
-            this.wOpacity.watch("value", function (attr, oldVal, newVal) {
-                widget.setItemValue("opacity", newVal);
-            });
+            this.component = reactApp.default(
+                Panorama360.default,
+                { store: this.store },
+                this.domNode
+            );
         },
-
-        setItemValue: function (attr, value) {
-            this.itemStore.setValue(this.widgetTree.selectedItem, attr, value);
-        },
-
-        getItemValue: function (attr) {
-            if (this.widgetTree.selectedItem) {
-                return this.itemStore.getValue(this.widgetTree.selectedItem, attr);
+        destroy: function () {
+            if (this.component) {
+                this.component.unmount();
             }
+            this.component = null;
         },
 
         serializeInMixin: function (data) {
-            if (data.panorama360_table == undefined) { data.panorama360_table = {}; }
-            var store = this.itemStore;
+            this._value = data.Panorama360;
 
-            function dump(itm) {
-                return {
-                    display_name: store.getValue(itm, "display_name"),
-                    resource_id: store.getValue(itm, "resource_id"),
-                    enabled: store.getValue(itm, "enabled"),
-                    opacity: store.getValue(itm, "opacity")
-                };
+            if (this.component){
+                this.component.update();
             }
-
-            data.panorama360_table.panoramas = array.map(
-                store.getValues(this.itemModel.root, "children"),
-                function (itm) { return dump(itm); }
-            );
         },
 
         deserializeInMixin: function (data) {
-            if (value === undefined) { return; }
-
-            array.forEach(value, function (i) {
-                this.itemStore.newItem(i, {
-                    parent: this.itemModel.root,
-                    attribute: "children"
-                });
-                this.itemIdx++;
-            }, this);
-
-            // Switch to first node
-            if (this.itemIdx > 0) {
-                this.widgetTree.set("path", [this.widgetTreeRootNodeId, 1]);
-            }
-        },
-
-        validateDataInMixin: function (errback) {
-            var success = true;
-
-            array.every(this.widgetTree.rootNode.getChildren(), function (n) {
-                this.widgetTree.set("path", [
-                    this.widgetTreeRootNodeId,
-                    n.getIdentity()
-                ]);
-                success = success && this.widgetPropertiesForm.validate();
-                return success;
-            }, this);
-
-            return success;
+            data.Panorama360 = this._value;
         }
     });
 });

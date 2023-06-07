@@ -38,15 +38,15 @@ class Panorama360Table(Base):
 
     webmap_id = db.Column(db.ForeignKey(WebMap.id), primary_key=True)
     resource_id = db.Column(db.ForeignKey(Resource.id), primary_key=True)
-    position = db.Column(db.Integer)
     display_name = db.Column(db.Unicode, nullable=False)
+    panorama_layer_field = db.Column(db.Unicode, nullable=False)
     enabled = db.Column(db.Boolean)
-    opacity = db.Column(db.Float)
+    
     
     table = db.relationship(
         WebMap, foreign_keys=webmap_id, backref=db.backref(
-                'panoramas', cascade='all, delete-orphan', order_by=position,
-                collection_class=ordering_list('position')))
+                'panoramas', cascade='all, delete-orphan',
+                collection_class=ordering_list('panorama_layer_field')))
     resource = db.relationship(
          Resource, foreign_keys=resource_id,
          backref=db.backref('_panoramas', cascade='all'))
@@ -54,10 +54,8 @@ class Panorama360Table(Base):
     def to_dict(self):
         return dict(
             resource_id=self.resource_id,
-            position=self.position,
-            display_name=self.display_name,
-            enabled=self.enabled,
-            opacity=self.opacity)
+            panorama_layer_field=self.panorama_layer_field,
+            enabled=self.enabled,)
 
 class Panorama360LayerSerializer(Serializer):
     identity = Panorama360Layer.identity
@@ -71,9 +69,7 @@ class Panorama360LayerSerializer(Serializer):
 
 class _panorama360_attr(SP):
     def getter(self, srlzr):
-        return sorted(
-            [p360.to_dict() for p360 in srlzr.obj.panoramas],
-            key=lambda p360: p360['position'])
+        return [p360.to_dict() for p360 in srlzr.obj.panoramas]
 
     def setter(self, srlzr, value):
         srlzr.obj.panoramas = []
@@ -82,7 +78,7 @@ class _panorama360_attr(SP):
             p360_object = Panorama360Table(resource_id=p360['resource_id'])
             srlzr.obj.panoramas.append(p360_object)
 
-            for attr in ('display_name', 'enabled', 'opacity'):
+            for attr in ('display_name', 'enabled', 'panorama_layer_field'):
                 setattr(p360_object, attr, p360[attr])
 
 
