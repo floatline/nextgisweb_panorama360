@@ -1,6 +1,5 @@
 /* globals define */
 
-//@nextgisweb_panorama360/Panorama360"
 define([
     "dojo/_base/declare", 
     "dijit/layout/ContentPane",
@@ -26,9 +25,12 @@ define([
 
         buildRendering: function () {
             this.inherited(arguments);
+            var widget = this;
             this.component = reactApp.default(
                 Panorama360Settings.default,
-                { store: this.store },
+                { onChange: function(values) {
+                    widget._value = values
+                }  },
                 this.domNode
             );
         },
@@ -40,15 +42,18 @@ define([
         },
 
         serializeInMixin: function (data) {
-            this._value = data.Panorama360;
+            this._value = data.panorama360_settings;
 
             if (this.component){
-                this.component.update();
+                this.component.update({values: this._value}) ;
+                console.log("I'm in this.component!");
             }
+            console.log("I'm in serialize!");
         },
 
         deserializeInMixin: function (data) {
-            data.Panorama360 = this._value;
+            data.panorama360_settings = this._value;
+            console.log("I'm in deserialize!");
         }
     });
 });

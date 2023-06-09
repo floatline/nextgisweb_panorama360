@@ -1,8 +1,8 @@
 from nextgisweb.env import Component, require
 from nextgisweb.lib.config import Option
-from .model import Base, Panorama360Table
+from .model import Base, Panorama360Settings
 __all__ = [
-    'Base', 'Panorama360Table'
+    'Base', 'Panorama360Settings'
 ]
 
 VERSION = "0.0.1"
@@ -23,7 +23,7 @@ class Panorama360Component(Component):
         from . import view
 
     def client_settings(self, request):
-        return None
+        return 
 
     def sys_info(self):
         return (

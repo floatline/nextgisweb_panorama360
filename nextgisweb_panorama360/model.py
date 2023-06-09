@@ -9,31 +9,25 @@ from nextgisweb.resource import (
     SerializedProperty as SP,
     DataScope,
     ResourceScope,
+    MetadataScope,
 )
 from nextgisweb.webmap import WebMap
 
 from .util import _
 
-# I'm not sure how Base works but without it Panorama360 doesn't show up in the Resource tab
 Base = declarative_base()
 
-class Panorama360Table(Base):
-    __tablename__ = 'panorama360_table'
+class Panorama360Settings(Base):
+    __tablename__ = 'panorama360_settings'
 
-    webmap_id = db.Column(db.ForeignKey(WebMap.id), primary_key=True)
     resource_id = db.Column(db.ForeignKey(Resource.id), primary_key=True)
-    display_name = db.Column(db.Unicode, nullable=False)
     panorama_layer_field = db.Column(db.Unicode, nullable=False)
     enabled = db.Column(db.Boolean)
+
+    resource = db.relationship(Resource, backref=db.backref(
+        'panorama360', cascade='all, delete-orphan', uselist=False))
+
     
-    
-    table = db.relationship(
-        WebMap, foreign_keys=webmap_id, backref=db.backref(
-                'panoramas', cascade='all, delete-orphan',
-                collection_class=ordering_list('panorama_layer_field')))
-    resource = db.relationship(
-         Resource, foreign_keys=resource_id,
-         backref=db.backref('_panoramas', cascade='all'))
 
     def to_dict(self):
         return dict(
@@ -42,27 +36,46 @@ class Panorama360Table(Base):
             enabled=self.enabled,)
 
 
-class _panorama360_attr(SP):
+class _Panorama360Settings_enabled(SP):
     def getter(self, srlzr):
-        return [p360.to_dict() for p360 in srlzr.obj.panoramas]
-
+        panorama360 = srlzr.obj.panorama360
+        if panorama360 is None:
+            return None
+        return panorama360.enabled
+        
     def setter(self, srlzr, value):
-        srlzr.obj.panoramas = []
-
-        for p360 in value:
-            p360_object = Panorama360Table(resource_id=p360['resource_id'])
-            srlzr.obj.panoramas.append(p360_object)
-
-            for attr in ('display_name', 'enabled', 'panorama_layer_field'):
-                setattr(p360_object, attr, p360[attr])
+        if srlzr.obj.panorama360 is None:
+            srlzr.obj.panorama360 = Panorama360Settings()
 
 
-class Panorama360pWebMapSerializer(Serializer):
-    identity = Panorama360Table.__tablename__
-    resclass = WebMap
+class _Panorama360Settings_layer_field(SP):
+    def getter(self, srlzr):
+        panorama360 = srlzr.obj.panorama360
+        if panorama360 is None:
+            return None
+        return panorama360.panorama_layer_field
+        
+    def setter(self, srlzr, value):
+        if srlzr.obj.panorama360 is None:
+            srlzr.obj.panorama360 = Panorama360Settings()
+        srlzr.obj.panorama360 = value
 
-    panoramas = _panorama360_attr(read=ResourceScope.read,
-                               write=ResourceScope.update)
+
+class _Panorama360Settings_resource_id(SP):
+    def getter(self, srlzr):
+        panorama360 = srlzr.obj.panorama360
+        return panorama360.resource_id
+              
+
+
+class Panorama360pSettingsSerializer(Serializer):
+    identity = Panorama360Settings.__tablename__
+    resclass = Resource
+
+    resource_id = _Panorama360Settings_resource_id(write=ResourceScope.read)
+    enabled = _Panorama360Settings_enabled(write=MetadataScope.write, read=MetadataScope.read)
+    panorama_layer_field = _Panorama360Settings_layer_field(write=MetadataScope.write, read=MetadataScope.read)
+
 
 
 

@@ -1,61 +1,81 @@
-// import { FieldsForm, useForm} from "@nextgisweb/gui/fields-form";
-// import { useEffect, useState } from "react";
-// import i18n from "@nextgisweb/pyramid/i18n!gui"
-
-export const Panorama360Settings = () =>  {
-     
-
-    // const form = useForm()[0];
-
-    // const [enabled, setEnabled] = useState(false);
-    // const [panorama360LayerField, setPanorama360LayerField] = useState();
+import { FieldsForm, useForm} from "@nextgisweb/gui/fields-form";
+import { useEffect, useState, useMemo } from "react";
+import i18n from "@nextgisweb/pyramid/i18n!gui";
+//{panorama_enabled, panorama_layer_field}
+export const Panorama360Settings = ( {onChange, values} ) =>  {
+    
+    const form = useForm()[0];
+    //const [values_, setValues_] = useState(values); - not needed
+    // const [panoramaEnabled, setPanoramaEnabled] = useState(panorama_enabled);
+    // const [panoramaLayerField, setPanoramaLayerField] = useState(panorama_layer_field);
     // // const [values, setValues] = useState();
 
 
 
     
 
-    // const fields = useMemo(() => [
-    //     {
-    //         name: "enabled",
-    //         title: i18n.gettext("Enable Panorama360"),
-    //         widget: "checkbox",
-    //         required: true,
-    //     },
-    //     {
-    //         name: "panorama360LayerField",
-    //         title: i18n.gettext("Select the name of the field where the panorama links are"),
-    //         required: true,
-    //         disabled: !enabled,
-    //         widget: "input"
-    //     }
-    // ],
-    // // [enabled, panorama360LayerField]
-    // [enabled]
-    // );
+    const fields =  [
+        {
+            name: "panorama_enabled",
+            label: i18n.gettext("Enable Panorama360"),
+            widget: "checkbox",
+            required: true,
+        
+        },
+        {
+            name: "panorama_layer_field",
+            label: i18n.gettext("Field name"),
+            required: true,
+            //disabled: !panorama_enabled,
+            widget: "input"
+        }
+    ] 
+
+
+
+    useEffect(() => { 
+        //update form
+        form.setFieldsValue(values);
+        console.log("I'm in useEffect")
+    }, [values]) 
+
     
-    // const p = { fields, size: "large", form };
+    
+    // const updateField()
 
-    // useEffect(() => {
-    //      console.log(store);
-    //  }, []);
-
-    // // const updateField()
-
-    // const onChange = (val) => {
-    //     setPanorama360LayerField(val);
+    // const onEnabledChange = (val) => {
+    //     setPanoramaEnabled(val);
     // };
 
+    // const onFieldsChange = (val) => {
+    //     setPanoramaLayerField(val);
+    // }
+
+    const onFieldsChange = (changedFields) => {
+       console.log(...changedFields);
+       console.log("I'm running onFieldsChange")
+    };
+
+    //const initVals = [true, null];
     return (
-        <div>
-            123
-            {/* <FieldsForm>
-                {p}
-                onChange={onChange}
-            </FieldsForm> */}
-        </div>
+           <div className="ngw-panorama360-settings-form"
+           style={{padding: "16px"}}>
+            <h1>Panorama360 Settings</h1>
+            <FieldsForm 
+                fields={fields}
+                form={form}
+                onFieldsChange={onFieldsChange}
+                initialValues={values}
+                // onChange={ 
+                //     ({ value })
+                // }
+            >
+            </FieldsForm>
+            </div>
     );
 }
+
+
 
     
     
