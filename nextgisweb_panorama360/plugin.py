@@ -6,14 +6,10 @@ class Panorama360Plugin(WebmapPlugin):
 
     @classmethod
     def is_supported(cls, webmap):
-        # TODO: Security
-        panoramas = [dict(
-            url=p360.resource.url,
-            **p360.to_dict())
-            for p360 in webmap.panoramas]
         return (
-            "ngw-panorama360/plugin/Panorama360",
+            "ngw-panorama360/WebMapWidget",
             dict(
-                 panoramas=panoramas,
+                 enabled=webmap.panorama360.enabled,
+                 panorama_layer_field=webmap.panorama360.panorama_layer_field,    
         )
         )

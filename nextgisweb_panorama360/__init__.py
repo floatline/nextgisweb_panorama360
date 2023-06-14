@@ -1,8 +1,8 @@
 from nextgisweb.env import Component, require
 from nextgisweb.lib.config import Option
-from .model import Base, Panorama360Settings
+from .model import Base, Panorama360Webmap
 __all__ = [
-    'Base', 'Panorama360Settings'
+    'Base', 'Panorama360Webmap'
 ]
 
 VERSION = "0.0.1"

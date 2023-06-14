@@ -41,19 +41,17 @@ define([
             this.component = null;
         },
 
-        serializeInMixin: function (data) {
+        deserializeInMixin: function (data) {
             this._value = data.panorama360_settings;
 
             if (this.component){
-                this.component.update({values: this._value}) ;
-                console.log("I'm in this.component!");
+                this.component.update({ values: this._value }) ;
+
             }
-            console.log("I'm in serialize!");
         },
 
-        deserializeInMixin: function (data) {
+        serializeInMixin: function (data) {
             data.panorama360_settings = this._value;
-            console.log("I'm in deserialize!");
         }
     });
 });
