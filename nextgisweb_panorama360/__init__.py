@@ -13,7 +13,7 @@ class Panorama360Component(Component):
     metadata = Base.metadata
 
     def initialize(self):
-        from . import plugin
+        from . import extension
 
     def configure(self):
         super(Panorama360Component, self).configure()
