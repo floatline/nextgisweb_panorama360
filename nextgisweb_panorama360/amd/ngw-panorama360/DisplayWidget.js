@@ -22,28 +22,35 @@ define([
     route,
     DisplayWidget,
     reactApp,
-    Panorama360Plugin
+    Panorama360Plugin,
 
 ) {
     return declare([DisplayWidget], {
         title: "Panorama360",
         // title: i18n.gettext("Panorama360"),
-        //Uncaught TypeError: i18n.gettext is not a function
+        // Uncaught TypeError: i18n.gettext is not a function
 
         startup: function () {
             this.inherited(arguments);
         },
 
-        renderValue: function (value) {
+        renderValue: function (url) {          
+            if (!url) {
+                return false
+            }
             this.inherited(arguments);
             var widget = this;
             this.component = reactApp.default(
-                Panorama360Plugin.default, 
-                { onChange: function(values) {
-                    widget._value = value
-                }  },
+                Panorama360Plugin.default,
+                {
+                    // onChange: function (url) {
+                    //     widget._url = url
+                    // }
+
+                    url: url
+                },
                 this.domNode
-                );
+            );
         },
 
     });
