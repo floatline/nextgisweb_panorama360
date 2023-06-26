@@ -10,8 +10,6 @@ define([
     "@nextgisweb/gui/react-app",
     "@nextgisweb/panorama360/panorama360-plugin",
 
-
-
 ], function (
     declare,
     i18n,
@@ -26,6 +24,9 @@ define([
 
 ) {
     return declare([DisplayWidget], {
+
+
+
         title: "Panorama360",
         // title: i18n.gettext("Panorama360"),
         // Uncaught TypeError: i18n.gettext is not a function
@@ -34,10 +35,20 @@ define([
             this.inherited(arguments);
         },
 
-        renderValue: function (url) {          
-            if (!url) {
-                return false
+        isValidUrl: function (url) {
+            var pattern = new RegExp(/^(https?:\/\/)?([\w.\-]+)\.([a-z]{2,})(\/[\w.\-%]*)*\/?$/i);
+            return pattern.test(url);
+        },
+
+
+        renderValue: function (url) {
+            console.log(url);
+            if (!this.isValidUrl(url)) {
+                return false;
             }
+            
+
+
             this.inherited(arguments);
             var widget = this;
             this.component = reactApp.default(
@@ -53,5 +64,6 @@ define([
             );
         },
 
+
     });
-});
+})

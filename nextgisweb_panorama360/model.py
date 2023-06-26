@@ -64,6 +64,8 @@ class _Panorama360Webmap_layer_field(SP):
         srlzr.obj.panorama360.panorama_layer_field = value
 
 
+
+
 class Panorama360WebmapSerializer(Serializer):
     identity = Panorama360Webmap.__tablename__
     resclass = Resource

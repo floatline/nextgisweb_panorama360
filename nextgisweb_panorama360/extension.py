@@ -1,8 +1,12 @@
 from nextgisweb.feature_layer import FeatureExtension
 from nextgisweb.env.model import DBSession
+from nextgisweb.resource import (
+    Resource,
+    ResourceScope)
 import requests
 
 from .model import Panorama360Webmap
+from nextgisweb.pyramid.view import home
 
 
 class Panorama360Extension(FeatureExtension):
@@ -13,23 +17,30 @@ class Panorama360Extension(FeatureExtension):
 
 
 
+    # def serialize(self, feature):
+
+    #     # FIXME Somehow provide resource id of the webmap
+    #     # Sending the table in a dict to front is a bad idea
+
+    #     db_request = DBSession.query(Panorama360Webmap).all()
+    #     result_dict = {}
+    #     for row in db_request:
+    #         result_dict[str(row.resource_id)] = row.to_dict()
+    #     return (dict(feature.fields), result_dict)
+
+
+
     def serialize(self, feature):
         enabled =  DBSession.query(Panorama360Webmap).first().enabled
         panorama_layer_field = DBSession.query(Panorama360Webmap).first().panorama_layer_field
         if enabled:
             if panorama_layer_field in feature.fields.keys():
                 url = feature.fields[panorama_layer_field]
-                if url:
-                    try:
-                        response = requests.head(url)
-                        # if response.status_code == requests.codes.ok:
-                        # why does it give the 403 Forbidden code?
-                        if response.status_code in (200, 403):
-                            return url
-                    except requests.exceptions.RequestException:
-                        raise Exception("Nothing came")
+                return url
         else:
             return None
+
+        
         
 
     def deserialize(self, feature, data):
