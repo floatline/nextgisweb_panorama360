@@ -3,6 +3,7 @@ define([
     "dojo/_base/array",
     "dojo/dom-class",
     "dojo/on",
+    "dojo/request",
     "put-selector/put",
     "@nextgisweb/pyramid/i18n!",
     "@nextgisweb/pyramid/api",
@@ -18,6 +19,7 @@ define([
     on,
     put,
     route,
+    request,
     DisplayWidget,
     reactApp,
     Panorama360Plugin,
@@ -35,18 +37,14 @@ define([
             this.inherited(arguments);
         },
 
-        isValidUrl: function (url) {
-            var pattern = new RegExp(/^(https?:\/\/)?([\w.\-]+)\.([a-z]{2,})(\/[\w.\-%]*)*\/?$/i);
-            return pattern.test(url);
-        },
 
 
         renderValue: function (url) {
             console.log(url);
             if (!this.isValidUrl(url)) {
                 return false;
-            }
-            
+            };
+
 
 
             this.inherited(arguments);
@@ -63,6 +61,12 @@ define([
                 this.domNode
             );
         },
+        isValidUrl: function (url) {
+            var pattern = new RegExp(/^(https?:\/\/)?([\w.\-]+)\.([a-z]{2,})(\/[\w.\-%]*)*\/?$/i);
+            return pattern.test(url);
+
+        },
+
 
 
     });
