@@ -9,7 +9,7 @@ define([
     "@nextgisweb/pyramid/api",
     "ngw-feature-layer/DisplayWidget",
     "@nextgisweb/gui/react-app",
-    "@nextgisweb/panorama360/panorama360-plugin",
+    "@nextgisweb/panorama360/panorama360-display",
 
 ], function (
     declare,
@@ -22,7 +22,7 @@ define([
     request,
     DisplayWidget,
     reactApp,
-    Panorama360Plugin,
+    Panorama360Display,
 
 ) {
     return declare([DisplayWidget], {
@@ -50,17 +50,16 @@ define([
             this.inherited(arguments);
             var widget = this;
             this.component = reactApp.default(
-                Panorama360Plugin.default,
+                Panorama360Display.default, 
                 {
-                    // onChange: function (url) {
-                    //     widget._url = url
-                    // }
-
-                    url: url
+                    url: url,
+                    _open: true
                 },
                 this.domNode
             );
         },
+
+
         isValidUrl: function (url) {
             var pattern = new RegExp(/^(https?:\/\/)?([\w.\-]+)\.([a-z]{2,})(\/[\w.\-%]*)*\/?$/i);
             return pattern.test(url);

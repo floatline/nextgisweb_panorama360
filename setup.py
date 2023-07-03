@@ -7,7 +7,7 @@ with io.open('VERSION', 'r') as fd:
 
 # add any packages that you used
 requires = (
-    'nextgisweb>=4.4.0.dev6',
+    'nextgisweb>=4.4.0.dev6'
 )
 
 entry_points = {
