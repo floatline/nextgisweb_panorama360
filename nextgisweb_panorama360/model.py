@@ -1,5 +1,3 @@
-from sqlalchemy.ext.orderinglist import ordering_list
-
 from nextgisweb.env.model import declarative_base
 from nextgisweb.lib import db
 from nextgisweb.resource import (
@@ -12,7 +10,6 @@ from nextgisweb.resource import (
     ResourceScope,
     MetadataScope,
 )
-from nextgisweb.webmap import WebMap
 
 from .util import _
 

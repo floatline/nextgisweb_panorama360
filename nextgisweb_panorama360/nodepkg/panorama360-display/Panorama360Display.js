@@ -1,6 +1,5 @@
-import { Button, Tabs, Modal, Upload, Checkbox } from "@nextgisweb/gui/antd";
-import { useEffect, useState, useMemo, useRef, useLayoutEffect } from "react";
-import { ContentBox } from "@nextgisweb/gui/component/ContentBox";
+import { Button, Modal } from "@nextgisweb/gui/antd";
+import { useRef, useLayoutEffect } from "react";
 import i18n from "@nextgisweb/pyramid/i18n!gui";
 import showModal from "@nextgisweb/gui/showModal"
 import "pannellum"
@@ -9,34 +8,34 @@ import "./Panorama360Modal.less"
 import "pannellum/build/pannellum.css"
 
 const PannellumModal = ({ url, ...props }) => {
+
     const pannellumWrapper = useRef(null);
+    console.log(typeof (url));
 
     useLayoutEffect(() => {
-        if (pannellumWrapper.current) {
-            window.pannellum.viewer(pannellumWrapper.current, {
-                "type": "equirectangular",
-                {pannellumWrapper.current}: { url }
-            });
+        pannellumWrapper.current = window.pannellum.viewer(pannellumWrapper.current, {
+            autoLoad: true,
+            type: "equirectangular",
+            panorama: url
+        });
+        return () => {
+            pannellumWrapper.current.destroy()
         }
-        return () => { 
-            
-        }
-        //TODO: unmount pannellum
     }, []);
 
     return (
         <Modal
             title={null}
-            width="900px"
-            height="600px"
+            width="70%"
+            height="80%"
             closable={true}
             centered={true}
             footer={null}
             {...props}
         >
             <div
-                height="600px"
-                width="900px"
+                height="100%"
+                width="fit-content"
                 ref={pannellumWrapper}
             >
 

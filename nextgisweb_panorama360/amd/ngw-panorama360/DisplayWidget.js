@@ -26,7 +26,9 @@ define([
 
 ) {
     return declare([DisplayWidget], {
-
+        
+        // var data = plugin.display.get("itemConfig").plugin[plugin.identity];
+        // webmap information
 
 
         title: "Panorama360",
@@ -40,6 +42,8 @@ define([
 
 
         renderValue: function (url) {
+            // var plugin = this.plugin;
+            // console.log(plugin.display.get("itemConfig").plugin[plugin.identity]);
             console.log(url);
             if (!this.isValidUrl(url)) {
                 return false;

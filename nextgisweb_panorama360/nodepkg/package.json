@@ -3,5 +3,6 @@
     "version": "0.0.0",
     "type": "module",
     "dependencies" :{
+        "pannellum": "2.5.6"
     }
 }
