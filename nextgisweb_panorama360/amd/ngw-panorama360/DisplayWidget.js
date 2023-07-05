@@ -26,7 +26,7 @@ define([
 
 ) {
     return declare([DisplayWidget], {
-        
+
         // var data = plugin.display.get("itemConfig").plugin[plugin.identity];
         // webmap information
 
@@ -39,38 +39,25 @@ define([
             this.inherited(arguments);
         },
 
-
-
         renderValue: function (url) {
             // var plugin = this.plugin;
-            // console.log(plugin.display.get("itemConfig").plugin[plugin.identity]);
-            console.log(url);
+            console.log(this)
             if (!this.isValidUrl(url)) {
                 return false;
             };
-
-
-
             this.inherited(arguments);
-            var widget = this;
             this.component = reactApp.default(
-                Panorama360Display.default, 
+                Panorama360Display.default,
                 {
-                    url: url,
-                    _open: true
+                    url: url
                 },
                 this.domNode
             );
         },
-
-
         isValidUrl: function (url) {
             var pattern = new RegExp(/^(https?:\/\/)?([\w.\-]+)\.([a-z]{2,})(\/[\w.\-%]*)*\/?$/i);
             return pattern.test(url);
 
         },
-
-
-
     });
 })

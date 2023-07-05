@@ -40,16 +40,15 @@ const PannellumModal = ({ url, ...props }) => {
             >
 
             </div>
-
         </Modal >
     )
 };
 
-export const Panorama360Display = ({ url, _open }) => {
+export const Panorama360Display = ({ url }) => {
 
     return (<div className="ngw-panorama360-identify-button"
         centered="true"
-    >
+        >
         <Button
             centered="true"
             onClick={() => {
@@ -63,6 +62,5 @@ export const Panorama360Display = ({ url, _open }) => {
         >
             {i18n.gettext("Open panorama")}
         </Button>
-
     </div>)
 };
