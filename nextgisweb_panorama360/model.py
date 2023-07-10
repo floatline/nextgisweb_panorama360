@@ -1,4 +1,4 @@
-from nextgisweb.env.model import declarative_base
+from nextgisweb.env import Base, _
 from nextgisweb.lib import db
 from nextgisweb.resource import (
     Resource,
@@ -10,10 +10,6 @@ from nextgisweb.resource import (
     ResourceScope,
     MetadataScope,
 )
-
-from .util import _
-
-Base = declarative_base(dependencies=('resource'))
 
 class Panorama360Webmap(Base):
     __tablename__ = 'panorama360_settings'
