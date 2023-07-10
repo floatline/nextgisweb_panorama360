@@ -7,15 +7,12 @@ with io.open('VERSION', 'r') as fd:
 
 # add any packages that you used
 requires = (
-    'nextgisweb>=4.4.0.dev6'
+    'nextgisweb>=4.5.0.dev7'
 )
 
 entry_points = {
     'nextgisweb.packages': [
-        'nextgisweb_panorama360 = nextgisweb_panorama360:pkginfo',
-    ],
-    'nextgisweb.amd_packages': [
-        'nextgisweb_panorama360 = nextgisweb_panorama360:amd_packages',
+        'nextgisweb_panorama360 = nextgisweb:single_component',
     ],
 }
 

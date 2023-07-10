@@ -1,5 +1,5 @@
 from nextgisweb.feature_layer import FeatureExtension
-from nextgisweb.env.model import DBSession
+from nextgisweb.env import DBSession
 from nextgisweb.resource import (
     Resource,
     ResourceScope)
