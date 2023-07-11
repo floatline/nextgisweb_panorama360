@@ -51,7 +51,6 @@ define([
         },
 
         serializeInMixin: function (data) {
-            // Something should be done in here
             data.panorama360_settings = this._value;
         }
     });
