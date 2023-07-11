@@ -1,7 +1,8 @@
-import { Button, Modal } from "@nextgisweb/gui/antd";
+import { Button, Image, Modal } from "@nextgisweb/gui/antd";
 import { useRef, useLayoutEffect } from "react";
 import i18n from "@nextgisweb/pyramid/i18n!gui";
-import showModal from "@nextgisweb/gui/showModal"
+import showModal from "@nextgisweb/gui/showModal";
+import PanoramaIcon from "@material-icons/svg/panorama_photosphere/baseline.svg";
 import "pannellum"
 
 import "./Panorama360Modal.less"
@@ -10,7 +11,6 @@ import "pannellum/build/pannellum.css"
 const PannellumModal = ({ url, ...props }) => {
 
     const pannellumWrapper = useRef(null);
-    console.log(typeof (url));
 
     useLayoutEffect(() => {
         pannellumWrapper.current = window.pannellum.viewer(pannellumWrapper.current, {
@@ -47,10 +47,20 @@ const PannellumModal = ({ url, ...props }) => {
 export const Panorama360Display = ({ url }) => {
 
     return (<div className="ngw-panorama360-identify-button"
-        centered="true"
-        >
-        <Button
-            centered="true"
+    >
+        <Image
+            preview={{
+                height: "50%",
+                visible: false,
+                mask:
+                    <div>
+                        <PanoramaIcon />
+                        <span> {i18n.gettext("View panorama")}</span>
+                    </div>
+            }}
+            src={url}
+            height="50%"
+            width="100%"
             onClick={() => {
                 const modal = showModal(PannellumModal, {
                     url,
@@ -60,7 +70,6 @@ export const Panorama360Display = ({ url }) => {
                 })
             }}
         >
-            {i18n.gettext("Open panorama")}
-        </Button>
+        </Image>
     </div>)
 };
