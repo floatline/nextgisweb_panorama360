@@ -1,6 +1,6 @@
 from nextgisweb.env import Component, require
 from nextgisweb.lib.config import Option
-from .model import Base, Panorama360Webmap
+from .model import Panorama360Webmap, Base
 
 
 class Panorama360Component(Component):
