@@ -27,7 +27,7 @@ define([
         renderValue: function (featureFields) {
             var webmapId = this.webmapId;
 
-            api.route("resource.item", {
+            return api.route("resource.item", {
                 id: webmapId
             }).get({
                 cache: true
@@ -50,6 +50,7 @@ define([
                     },
                     this.domNode
                 );
+                return true;
             });
 
            
@@ -59,5 +60,6 @@ define([
             return pattern.test(url);
 
         },
+ 
     });
 })

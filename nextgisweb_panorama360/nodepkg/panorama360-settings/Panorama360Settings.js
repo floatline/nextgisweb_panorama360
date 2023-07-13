@@ -16,6 +16,7 @@ export const Panorama360Settings = ({ onChange, values }) => {
       label: i18n.gettext("Field name"),
       required: true,
       widget: "input",
+      placeholder: i18n.gettext("Default") + ": panorama_url"
     },
   ];
 
@@ -25,7 +26,6 @@ export const Panorama360Settings = ({ onChange, values }) => {
 
   return (
     <div className="ngw-panorama360-settings-form" style={{ padding: "16px" }}>
-      <h1>Panorama360 Settings</h1>
       <FieldsForm
         fields={fields}
         form={form}
